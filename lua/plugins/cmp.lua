@@ -1,5 +1,4 @@
 return {
-  -- nvim-cmp configuration so to not preselect completion and require tab to select
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
@@ -18,11 +17,13 @@ return {
       local cmp = require("cmp")
 
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
-        ["<CR>"] = vim.NIL,
+        -- Map Enter key to confirm selection in nvim-cmp
+        ["<CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true }),
 
+        -- Adjust Tab key behavior
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
-            cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true })
+            cmp.select_next_item()
           elseif require("copilot.suggestion").is_visible() then
             require("copilot.suggestion").accept()
           elseif luasnip.expand_or_locally_jumpable() then
@@ -34,6 +35,7 @@ return {
           end
         end, { "i", "s" }),
 
+        -- Shift-Tab for previous item
         ["<S-Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_prev_item()
@@ -44,6 +46,7 @@ return {
           end
         end, { "i", "s" }),
       })
+
       opts.preselect = cmp.PreselectMode.None
       opts.sources = cmp.config.sources(vim.list_extend(opts.sources, { { name = "emoji" } }))
     end,
