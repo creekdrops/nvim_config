@@ -11,6 +11,7 @@ return {
         "yarn.lock",
         "package-lock.json",
         ".next",
+        "db",
         ".git",
         ".cache",
         ".DS_Store",
